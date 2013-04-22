@@ -7,4 +7,6 @@ Todo:
 
 2. fix twitter REST API pull to grab all tweets by block and re-assign in twitter.js to separate arrays by building
 
-3. check that about page works (resizes well)
+3. implement multiple zoom levels, re-scaling tweets
+
+4. check that about page works (resizes well)
