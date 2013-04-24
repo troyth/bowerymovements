@@ -158,7 +158,6 @@ function refreshSVG(){
 		
 
 		$('polygon').bind('mouseenter', function(){
-			console.log('mouse enter');
 			var $elem = $(this);
 			var elemID = $elem.parents().attr('id');
 
@@ -166,8 +165,6 @@ function refreshSVG(){
 
 			var container_top = $container.position().top;
 			var container_bottom = container_top - $container.height();
-
-			console.log('container_bottom: '+ container_bottom);
 
 			//width and height of the hover image
 			var WIDTH_OF_HOVER_ELEMENT = 20;//width in pixels
@@ -187,8 +184,6 @@ function refreshSVG(){
 					)*2 -
 					HEIGHT_OF_HOVER_ELEMENT;
 
-					console.log("top_of_bottom: "+ top_of_bottom);
-
 			if(top_of_bottom > window.innerHeight){
 				$('#marker').css('bottom', '20%');
 			}else{
@@ -198,15 +193,9 @@ function refreshSVG(){
 			//@todo: might need to hardcode marker width as it will be 0 when empty
 			left = left + parseInt($('#image').css('left')) - parseInt($('#marker').width());
 
-			console.log('left: '+left);
-
-			
-
 			$('#marker').empty();
 			$('#marker').append(elemID);
-			console.log('hovering over: ' +elemID);
 		}).bind('mouseleave' ,function(){
-			console.log('mouse leave from svg polygon');
 
 			$('#marker').empty();
 		});
