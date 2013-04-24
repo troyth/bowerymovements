@@ -24,231 +24,134 @@ var lev1ht = '1500px';
 var lev2ht = '1500px';
 var lev3ht = '2000px';
 
-/////////INITIAL_LOAD/////////
-$(document).ready(function(){
-	console.log('document loaded');
+//starting positions for background graphic
+var initial_position = [];
 
-	$('#marker').hide();
+initial_position[3] = [];
+initial_position[3][1] = { top: '-1400px', left: '-5400px' };
+initial_position[3][2] = { top: '-1400px', left: '-400px' };
+initial_position[3][3] = { top: '-1400px', left: '-400px' };
+initial_position[3][4] = { top: '-1400px', left: '-400px' };
 
-	imgHt = lev1ht;
-	imgWd = $('#image img').width();
+//block elevation
+var block_elevation;
 
-	//pull source file location from current image
-	var src = $('#image img').attr('src');
 
-	//index filename variables
-	var index1 = src.indexOf('--')+2;
-	var index2 = src.indexOf('__')+2;
+function setInitialBackgroundImagePosition(){
+	console.log('zoomIndex: '+ zoomIndex + ' angleIndex: '+ angleIndex);
 
-	//parse filename variables
-	var zoomIndex = parseInt(src.substr(index1,1));
-	var angleIndex = parseInt(src.substr(index2,1));
-	
-	console.log ("zoom level: "+zoomIndex+" / angle: "+angleIndex);
+	$('#image').css('top', initial_position[zoomIndex][angleIndex].top );
+	$('#image').css('left', initial_position[zoomIndex][angleIndex].left );
+}
 
-	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.' + 'svg', function() {  
-		//do something
-	});
-	console.log("svg loaded.");
 
-	/////////SPIN_LEFT/////////
-	$('#spin-left').on('click', function(){
-		//alert('spinLeft called');
-		console.log('spinLeft called');
+//swaps the image underlay and regenerates the SVG overlay
+function swapImage(direction){
+	//stop Zooming while spin is in effect
+	zoomToggle = false;
 
-		//stop Zooming while spin is in effect
-		zoomToggle = false;
+	//clear SVG to prevent selection while turning
+	$('#overlay').empty();
 
-		//clear SVG to prevent selection while turning
-		$('#overlay').empty();
-		
-		//pull source file location from current image
-		var src = $('#image img').attr('src');
 
-		//index filename variables
-		var index1 = src.indexOf('--')+2;
-		var index2 = src.indexOf('__')+2;
-
-		//parse filename variables
-		var zoomIndex = parseInt(src.substr(index1,1));
-		var angleIndex = parseInt(src.substr(index2,1));
-		
-		console.log ("zoom level: "+zoomIndex+" / angle: "+angleIndex);
-
-		//for values at the min
-		if (angleIndex >= maxAngle) angleIndex = 1;
-
-		//for all numbers above the min
-		else if (angleIndex < maxAngle)angleIndex++;
-
-		console.log ("zoom level: "+zoomIndex+" / angle: "+angleIndex);
-
-		//set new source for next frame
-		var srcNew = "img/bm--"+zoomIndex+"__"+angleIndex+".png";
-
-		//load new image
-		$('#image img').replaceWith('<img src='+srcNew+'>');
-		
-		//load new svg
-		$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {
-			//run additional functions here
-			refreshSVG();
-		});
-
-		console.log('svg '+zoomIndex+'/'+angleIndex+' loaded.');
-
-		//re-enable zooming
-		ZoomToggle = true;
-
-		refresh = true;
-
-	}); //end Spin Left
-
-	/////////SPIN_RIGHT/////////
-	$('#spin-right').on('click', function(){
-		//alert('spinRight called');
-		console.log('spinRight called');
-
-		//stop Zooming while spin is in effect
-		zoomToggle = false;
-
-		//clear SVG to prevent selection while turning
-		$('#overlay').empty();
-
-		//pull source file location from current image
-		var src = $('#image img').attr('src');
-
-		//index filename variables
-		var index1 = src.indexOf('--')+2;
-		var index2 = src.indexOf('__')+2;
-
-		//parse filename variables
-		var zoomIndex = parseInt(src.substr(index1,1));
-		var angleIndex = parseInt(src.substr(index2,1));
-		
-		console.log ("zoom level: "+zoomIndex+" / angle: "+angleIndex);
-		
+	if(direction == 'right'){
 		//for values at the min
 		if (angleIndex <= 1) angleIndex = maxAngle;
 
 		//for all numbers above the min
 		else if (angleIndex > 1)angleIndex--;
+	}else{
+		//for values at the min
+		if (angleIndex >= maxAngle) angleIndex = 1;
 
-		console.log ("zoom level: "+zoomIndex+" / angle: "+angleIndex);
+		//for all numbers above the min
+		else if (angleIndex < maxAngle)angleIndex++;
+	}
 
-		//set new source for next frame
-		var srcNew = "img/bm--"+zoomIndex+"__"+angleIndex+".png";
+	//set new source for next frame
+	var srcNew = "img/bm--"+zoomIndex+"__"+angleIndex+".png";
 
-		//load new image
-		$('#image img').replaceWith('<img src='+srcNew+'>');
-		
-		//load new svg
-		$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {
-			//run additional functions here
-			refreshSVG();
-		});
+	//load new image
+	//$('#image img').attr('src', srcNew);
 
-		console.log('svg '+zoomIndex+'/'+angleIndex+' loaded.');
+	$('#image img').one("load", function() {
+        // image loaded here
+        refreshSVG();
+    }).attr("src", srcNew);
 
-		//re-enable zooming
-		ZoomToggle = true;
+	//move image into initial position
+	setInitialBackgroundImagePosition();
+	
+	
 
-		refresh = true;
+	console.log('svg '+zoomIndex+'/'+angleIndex+' loaded.');
 
-	}); //end Spin Right
+	//re-enable zooming
+	ZoomToggle = true;
 
-	/////////ZOOM_IN/////////
-	$('#zoom-in').on('click',function(){
-		//alert('zoom-in called');
-		spinToggle = false;
+	refresh = true;
 
-		//clear SVG to prevent selection while turning
-		$('#overlay').empty();
+}
 
-		//pull source file location from current image
-		var src = $('#image img').attr('src');
+function spinRight(event){
+	event.preventDefault();
+	//alert('spinRight called');
+	console.log('spinRight called');
 
-		//index filename variables
-		var index1 = src.indexOf('--')+2;
-		var index2 = src.indexOf('__')+2;
+	swapImage('right');	
+}//end Spin Right
 
-		//parse filename variables
-		var zoomIndex = parseInt(src.substr(index1,1));
-		var angleIndex = parseInt(src.substr(index2,1));
-		
-		console.log ("current zoom level: "+zoomIndex+" / angle: "+angleIndex);
 
-		if (zoomIndex < maxZoom) zoomIndex++;
-		else zoomIndex = maxZoom;
+function spinLeft(event){
+	event.preventDefault();
+	//alert('spinLeft called');
+	console.log('spinLeft called');
 
-		var srcNew = "img/bm--"+zoomIndex+"__"+angleIndex+".png";
+	swapImage('left');
+}//end Spin Left
 
-		//set image tag to new image
-		$('#image img').replaceWith('<img src='+srcNew+'>');
-		console.log('new img '+zoomIndex+'/'+angleIndex+' loaded.');
 
-		//load new svg
-		$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {  
-			console.log('svg '+zoomIndex+'/'+angleIndex+' loaded.');
-		});
 
-		//re-enable turning
-		SpinToggle = true;
 
-		refresh = true;
+/////////INITIAL_LOAD/////////
+$(document).ready(function(){
+	console.log('document loaded');
+
+	imgHt = lev3ht;//@todo: change this to lev1 when i implement zooming
+	imgWd = $('#image img').width();
+
+	//parse filename variables
+	zoomIndex = 3;
+	angleIndex = 1;
+
+	//move image up to align with bottom of browser
+	setInitialBackgroundImagePosition();
+	
+
+	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.' + 'svg', function() {  
+		//do something
+		console.log("svg loaded.");
 	});
+	
+	/////////SPIN_LEFT/////////
+	$('#spin-left').on('click', spinLeft); 
 
-	/////////ZOOM_OUT/////////
-	$('#zoom-out').on('click',function(){
-		//alert('zoom-out called');
-		spinToggle = false;
+	/////////SPIN_RIGHT/////////
+	$('#spin-right').on('click', spinRight); //end Spin Right
 
-		//clear SVG to prevent selection while turning
-		$('#overlay').empty();
-
-		//pull source file location from current image
-		var src = $('#image img').attr('src');
-
-		//index filename variables
-		var index1 = src.indexOf('--')+2;
-		var index2 = src.indexOf('__')+2;
-
-		//parse filename variables
-		var zoomIndex = parseInt(src.substr(index1,1));
-		var angleIndex = parseInt(src.substr(index2,1));
-		
-		console.log ("zoom level: "+zoomIndex+" / angle: "+angleIndex);
-
-		if (zoomIndex > 1) zoomIndex--;
-		else zoomIndex = 1;
-
-		var srcNew = "img/bm--"+zoomIndex+"__"+angleIndex+".png";
-
-		//set image tag to new image
-		$('#image img').replaceWith('<img src='+srcNew+'>');
-
-		//load new svg
-		$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {  
-			$('#overlay').attr('width',$('#image img').attr('width'));
-			$('#overlay').attr('height',$('#image img').attr('height'));
-		});
-
-		console.log('svg '+zoomIndex+'/'+angleIndex+' loaded.');
-
-		//re-enable turning
-		SpinToggle = true;
-
-		refresh = true;
-
-		
-	});
-
+	//apply jQuery UI draggable to the image
 	$('#image').draggable();
+
+	//reload the correct svg every time the image changes
+	$('#image img').on('change', refreshSVG);
+
+	refreshSVG();
 });//end ready function
 
 function refreshSVG(){
 	console.log('refreshSVG()');
 	/////////IMAGE_RELOAD/////////
+	/*
 	$('#image').on('load',function(){
 		alert('image reload called');
 		imgHt = $('#image img').height();
@@ -257,22 +160,32 @@ function refreshSVG(){
 			width: imgWd,
 			height: imgHt
 		});
+	});*/
+
+	$('polygon').unbind('mouseenter', 'mouseleave');
+
+	//load new svg
+	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {
+		console.log('svg loaded, binding polygon hover event');
+		
+
+		$('polygon').bind('mouseenter', function(){
+			console.log('mouse enter');
+			var $elem = $(this);
+			var elemID = $elem.parents().attr('id');
+
+			$('#marker').empty();
+			$('#marker').append(elemID);
+			console.log('hovering over: ' +elemID);
+		}).bind('mouseleave' ,function(){
+			console.log('mouse leave from svg polygon');
+
+			$('#marker').empty();
+			$('#marker').append("nada");
+		});
 	});
 
-	$('polygon').hover(function(){
-		console.log('mouse enter');
-		var $elem = $(this);
-		var elemID = $elem.parents().attr('id');
-
-		$('#marker').empty();
-		$('#marker').append(elemID);
-		console.log('hovering over: ' +elemID);
-	}, function(){
-		console.log('mouse leave from svg polygon');
-
-		$('#marker').empty();
-		$('#marker').append("nada");
-	});
+		
 }
 
 //--LOAD NEW ELEMENTS--//
