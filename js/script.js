@@ -162,6 +162,46 @@ function refreshSVG(){
 			var $elem = $(this);
 			var elemID = $elem.parents().attr('id');
 
+			var $container = $('#'+elemID);
+
+			var container_top = $container.position().top;
+			var container_bottom = container_top - $container.height();
+
+			console.log('container_bottom: '+ container_bottom);
+
+			//width and height of the hover image
+			var WIDTH_OF_HOVER_ELEMENT = 20;//width in pixels
+			var HEIGHT_OF_HOVER_ELEMENT = 100;//height in pixels
+
+			var left = parseInt($('#image').position().left) + 
+					parseInt($container.find('line').attr('x1')) -
+					WIDTH_OF_HOVER_ELEMENT;
+
+			$('#marker').css('left', left);
+
+			var top_of_bottom = parseInt($('#image').position().top) + 
+					parseInt($container.find('line').attr('y2')) +
+					Math.abs(
+						parseInt($container.find('line').attr('y1')) -
+						parseInt($container.find('line').attr('y2'))
+					)*2 -
+					HEIGHT_OF_HOVER_ELEMENT;
+
+					console.log("top_of_bottom: "+ top_of_bottom);
+
+			if(top_of_bottom > window.innerHeight){
+				$('#marker').css('bottom', '20%');
+			}else{
+				$('#marker').css('top', top_of_bottom);
+			}
+
+			//@todo: might need to hardcode marker width as it will be 0 when empty
+			left = left + parseInt($('#image').css('left')) - parseInt($('#marker').width());
+
+			console.log('left: '+left);
+
+			
+
 			$('#marker').empty();
 			$('#marker').append(elemID);
 			console.log('hovering over: ' +elemID);
@@ -169,7 +209,6 @@ function refreshSVG(){
 			console.log('mouse leave from svg polygon');
 
 			$('#marker').empty();
-			$('#marker').append("nada");
 		});
 	});	
 }
