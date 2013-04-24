@@ -20,3 +20,4 @@ need from group2
 4. instructions page content
 5. other zoom level image underlays
 6. hover effect bubble underlay
+7. arrays with hashtags for each elevation face
