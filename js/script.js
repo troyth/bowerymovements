@@ -142,25 +142,13 @@ $(document).ready(function(){
 	//apply jQuery UI draggable to the image
 	$('#image').draggable();
 
-	//reload the correct svg every time the image changes
-	$('#image img').on('change', refreshSVG);
-
+	//load initial SVG overlay
 	refreshSVG();
 });//end ready function
 
+//load corresponding SVG overlay when new image loaded
 function refreshSVG(){
 	console.log('refreshSVG()');
-	/////////IMAGE_RELOAD/////////
-	/*
-	$('#image').on('load',function(){
-		alert('image reload called');
-		imgHt = $('#image img').height();
-		imgWd = $('#image img').width();
-		$('#image').css({
-			width: imgWd,
-			height: imgHt
-		});
-	});*/
 
 	$('polygon').unbind('mouseenter', 'mouseleave');
 
@@ -183,9 +171,7 @@ function refreshSVG(){
 			$('#marker').empty();
 			$('#marker').append("nada");
 		});
-	});
-
-		
+	});	
 }
 
 //--LOAD NEW ELEMENTS--//
