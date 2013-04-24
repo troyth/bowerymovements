@@ -10,3 +10,13 @@ Todo:
 3. implement multiple zoom levels, re-scaling tweets
 
 4. check that about page works (resizes well)
+
+need from group2
+===============
+
+1. new logo (movements plural)
+2. about sub-bubble
+3. how-to sub-bubble (eg. instructions)
+4. instructions page content
+5. other zoom level image underlays
+6. hover effect bubble underlay
