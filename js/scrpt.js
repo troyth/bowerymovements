@@ -339,7 +339,8 @@ function refreshImage(){
 
 
 
-function initImageDraggable(){
+function initImageDraggable(flag){
+	var flag = flag || false;
 
 	console.log('angleIndex: '+ angleIndex + ' zoomIndex: '+zoomIndex);
 	console.log('IMG[angleIndex][zoomIndex].width: '+ IMG[angleIndex][zoomIndex].width);
@@ -374,7 +375,14 @@ function initImageDraggable(){
 		top: top
 	});
 
-	var iLeft = Math.abs(IMG[angleIndex][zoomIndex].width - ww);
+	if(flag == true){
+		console.log('flag');
+	}else{
+		var iLeft = Math.abs(IMG[angleIndex][zoomIndex].width/2 - ww/2);
+		console.log('iLeft '+iLeft);
+	}
+
+	
 
 	$('#image').css('left', iLeft).draggable({ 'containment':'parent', 'cursor':'move' });//.css('top', initial_position[zoomIndex][angleIndex].top ).css('left', initial_position[zoomIndex][angleIndex].left ).css('backgroundColor', 'red');
 }

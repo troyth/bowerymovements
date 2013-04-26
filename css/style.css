@@ -113,6 +113,7 @@ rect:hover{
 	left:92%;
 	font-size:24px;
 	text-decoration: none;
+	cursor: pointer;
 }
 
 #zoom-out{
@@ -124,4 +125,5 @@ rect:hover{
 	left:92%;
 	font-size:24px;
 	text-decoration: none;
+	cursor: pointer;
 }
