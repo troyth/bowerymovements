@@ -24,14 +24,124 @@
 }
 
 #background{
-	position:fixed;
+	float:left;
+	clear:both;
 	z-index: 1;
 	width: 100%;
-	height:100%;
 	bottom:0;
 }
 
 #background img{
-	width:auto;
-	height:100%;
+	width:100%;
+	height:auto;
 }
+
+#about-bubble1{
+	float:left;
+	margin-top: 3%;
+	margin-left: 7%;
+	width:544px;/*332-80*/
+	height:317px;/*210-80*/
+	padding:40px;
+	background:transparent url('/assets/AboutBubbles1.png') no-repeat 0 0;
+}
+
+#about-bubble2{
+	float:left;
+	margin-top: 10%;
+	margin-left: 2%;
+	width:534px;/*614-80*/
+	height:309px;/*389-80*/
+	padding:40px;
+	background:transparent url('/assets/AboutBubbles2.png') no-repeat 0 0;
+}
+
+#about-bubble1 > div, #about-bubble2 > div{
+	padding: 2% 5%;
+}
+
+@media (min-width: 961px) and (max-width: 1380px){
+	#about-bubble1{
+		position:relative;
+		left:25%;
+		margin-left:-240px;
+		margin-top: 9%;
+		width:400px;/*480-80*/
+		height:200px;/*280-80*/
+		padding:40px;
+		background:transparent url('/assets/AboutBubbles1.png') no-repeat 0 0;
+		background-size:480px 280px;
+		font-size:11px;
+	}
+
+	#about-bubble2{
+		position:relative;
+		left:50%;
+		margin-top: 17%;
+		margin-left: -235px;
+		width:390px;/*614-80*/
+		height:192px;/*389-80*/
+		padding:40px;
+		background:transparent url('/assets/AboutBubbles2.png') no-repeat 0 0;
+		background-size:470px 272px;
+		font-size:11px;
+	}
+
+	#background{
+		position:fixed;
+		z-index: 0;
+		width: 100%;
+		bottom:0;
+	}
+
+	#about-bubble1 > div, #about-bubble2 > div{
+		padding: 0 2% 2% 3%;
+	}
+}
+
+
+@media (min-width: 481px) and (max-width: 960px){
+	#about-bubble2{
+		float:right;
+		clear:both;
+		margin-right:7%;
+		margin-top: 3%;
+	}
+
+	#about-bubble1 > div, #about-bubble2 > div{
+		padding: 2% 5%;
+	}
+
+}
+
+
+@media (max-width: 480px){
+	#about-bubble1{
+		position:relative;
+		margin-left:5%;
+		margin-top: 120px;
+		width:65%;/*480-80*/
+		height:110%;/*280-80*/
+		padding:10% 15% 10% 10%;
+		background:transparent url('/assets/AboutBubbles1.png') no-repeat 0 0;
+		background-size:90% 100%;
+		font-size:12px;
+	}
+
+	#about-bubble2{
+		position:relative;
+		margin-left:5%;
+		margin-top: 20px;
+		width:65%;/*480-80*/
+		height:110%;/*280-80*/
+		padding:10% 15% 10% 10%;
+		background:transparent url('/assets/AboutBubbles2.png') no-repeat 0 0;
+		background-size:90% 100%;
+		font-size:12px;
+	}
+
+	#about-bubble1 > div, #about-bubble2 > div{
+		padding:5% 5% 27% 2%;
+	}
+}
+

@@ -1,3 +1,100 @@
+/////// TWITTER ///////
+
+
+// GLOBAL VARS
+
+var timeActivity = 864000;
+var getInterval = 60;   
+
+var verticalBubbleShift = 205;
+var maxTweetLevel3 = 6;
+var svgId = "overlay";
+
+var runUpdates = false;
+
+
+var tweetObj = {};
+
+var tweetIdObj = {};
+
+
+//fetch tweets by face
+function getTweets() {
+  console.log("getTweets() Called with face: "+ angleIndex);
+
+    var target_url = 'http://dirty.gsappcloud.org/webassite-api/tweets/movements/elevation/'+angleIndex;
+
+    $.ajax({
+      type : "GET",
+      dataType : "jsonp",
+        url : target_url, // ?callback=?
+        success: function(data){
+          console.log('success');
+          //console.log(data);
+          //console.log(data.length);
+          if (data.length != 0) {
+            drawTweetsFace(data);
+          }
+        },
+
+        error: function(e){
+          console.log('ajax error');
+          console.dir(e);
+        }
+    }); 
+};
+
+
+function drawTweetsFace(data) {
+	console.log("drawTweetsFaceCalled");
+
+	$('.bubbletext, .bubblebg').remove();
+
+	var BUILDING_TWEET_COUNTER = [];
+
+	for (var i = 0; i <data.length; i++) { 
+
+		if(typeof BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ] == 'undefined'){
+	    	BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ] = 1;
+	    }else{
+	    	BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ]++;
+	    }
+
+	  	var $line = $('#'+data[i].hashtags[0]+' line');
+
+		var ptxt = parseInt($line.attr('x2')) - 60;
+	    var ptyt = parseInt($line.attr('y2'))-80-verticalBubbleShift * BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ];
+
+		var classString = data[i].hashtags[0]+'Text';
+	    var classStringFace = 'Face' + angleIndex;
+
+	    $('#image').append( '<p id="'+data[i].hashtags[0]+'Text" class="bubbletext '+ classString+'" style="width:200px; height:auto; position:absolute; z-index:101;left:' + ptxt + 'px;top:'+ ptyt + 'px" >'+data[i].text+'</p>');
+
+	    var ptxb = parseInt($line.attr('x2'))-80;
+	    var ptyb = parseInt($line.attr('y2'))-130-verticalBubbleShift * BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ];
+
+	    var bubbleString = "";
+	    if (BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ] > 1 ){
+	      var randInt = Math.floor((Math.random()*5)+1);
+	      bubbleString = "bubbleTop"+String(randInt)+".png";
+	    }
+	    else {
+	      var randInt = Math.floor((Math.random()*5)+1);
+	      bubbleString = "bubbleBottom"+String(randInt)+".png";
+	    }
+
+	    $('#image').append( '<img src="img/bubbles/'+bubbleString+'"  class="bubblebg '+ classString+'" style="width:auto; height:auto; position:absolute; z-index:100;left:' + ptxb + 'px;top:'+ ptyb +'px" />');
+
+	}
+
+}
+
+
+
+
+
+
+
 //dimensions of currently loaded image
 var imgHt;
 var imgWd;
@@ -37,14 +134,6 @@ initial_position[3][4] = { top: '-1400px', left: '-400px' };
 var block_elevation;
 
 
-function setInitialBackgroundImagePosition(){
-	console.log('zoomIndex: '+ zoomIndex + ' angleIndex: '+ angleIndex);
-
-	$('#image').css('top', initial_position[zoomIndex][angleIndex].top );
-	$('#image').css('left', initial_position[zoomIndex][angleIndex].left );
-}
-
-
 //swaps the image underlay and regenerates the SVG overlay
 function swapImage(direction){
 	//stop Zooming while spin is in effect
@@ -76,7 +165,7 @@ function swapImage(direction){
 
 	$('#image img').one("load", function() {
         // image loaded here
-        refreshSVG();
+        refreshImage();
     }).attr("src", srcNew);
 
 	//move image into initial position
@@ -111,53 +200,20 @@ function spinLeft(event){
 }//end Spin Left
 
 
-
-
-/////////INITIAL_LOAD/////////
-$(document).ready(function(){
-	console.log('document loaded');
-
-	imgHt = lev3ht;//@todo: change this to lev1 when i implement zooming
-	imgWd = $('#image img').width();
-
-	//parse filename variables
-	zoomIndex = 3;
-	angleIndex = 1;
-
-	//move image up to align with bottom of browser
-	setInitialBackgroundImagePosition();
-	
-
-	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.' + 'svg', function() {  
-		//do something
-		console.log("svg loaded.");
-	});
-	
-	/////////SPIN_LEFT/////////
-	$('#spin-left').on('click', spinLeft); 
-
-	/////////SPIN_RIGHT/////////
-	$('#spin-right').on('click', spinRight); //end Spin Right
-
-	//apply jQuery UI draggable to the image
-	$('#image').draggable();
-
-	//load initial SVG overlay
-	refreshSVG();
-});//end ready function
-
 //load corresponding SVG overlay when new image loaded
-function refreshSVG(){
-	console.log('refreshSVG()');
+function refreshImage(){
+	console.log('refreshImage()');
 
-	$('polygon').unbind('mouseenter', 'mouseleave');
+	$('polygon, rect').unbind('mouseenter', 'mouseleave');
 
 	//load new svg
 	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {
 		console.log('svg loaded, binding polygon hover event');
+
+		getTweets();
 		
 
-		$('polygon').bind('mouseenter', function(){
+		$('polygon, rect').bind('mouseenter', function(){
 			var $elem = $(this);
 			var elemID = $elem.parents().attr('id');
 
@@ -202,9 +258,64 @@ function refreshSVG(){
 	});	
 }
 
-//--LOAD NEW ELEMENTS--//
-$(window).on('load', refreshSVG);
+
+
+function initImageDraggable(){
+
+	var w = $('#image > img').width();
+	var h = $('#image > img').height();
+
+
+
+	var x1 = -1*Math.abs( w - window.innerWidth );
+	var y1 = -1*Math.abs( h - window.innerHeight );//seems to have a 400 px offset
+
+	var x2 = 0,
+		y2 = 1400;//add 1400 pixels for tweets on top of high buildings
+
+	console.log('('+x1 + ', '+ y1 + '), ('+ x2 + ','+y2+')');
+
+	$('#image').draggable({ containment: [x1, y1, x2, y2], cursor: "crosshair" });//.css('top', initial_position[zoomIndex][angleIndex].top ).css('left', initial_position[zoomIndex][angleIndex].left ).css('backgroundColor', 'red');
+
+}
+
+
+
+
+
+
+/////////INITIAL_LOAD/////////
+$(document).ready(function(){
+	console.log('document loaded');
+
+	imgHt = lev3ht;//@todo: change this to lev1 when i implement zooming
+	imgWd = $('#image img').width();
+
+	//parse filename variables
+	zoomIndex = 3;
+	angleIndex = 1;
 	
+	
+	/////////SPIN_LEFT/////////
+	$('#spin-left').on('click', spinLeft); 
+
+	/////////SPIN_RIGHT/////////
+	$('#spin-right').on('click', spinRight); //end Spin Right
+
+	//load initial SVG overlay
+	refreshImage();
+});//end ready function
+
+
+//apply jQuery UI draggable to the image
+$(window).on('load', initImageDraggable);
+
+
+
+
+
+
+
 
 
 

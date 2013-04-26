@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>bowery movements</title>
+
+	<meta name="viewport" content="width=device-width">
+	
+	<!-- load CSS -->
+	<link rel="stylesheet" type="text/css" href="http://reset5.googlecode.com/hg/reset.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<!-- load jQuery librarys -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+
+	<!-- load javascript -->
+
+	<style>
+	#testing{
+		width:100px;
+		height:100px;
+		background-color:red;
+		margin:0;
+		padding:0;
+		position:relative;
+		top:10px;
+		left:20px;
+	}
+
+	#image-container{
+		width:600px;
+		height:200px;
+		background-color: yellow;
+		position:fixed;
+		top:-20px;
+		left:-20px;
+	}
+	</style>
+
+</head>
+<body>
+	<div id='container'>
+		<!--<a id="zoom-in" href="#">+ zoom in</a>
+		<a id="zoom-out" href="bm--2__1.html">&minus; zoom out</a>-->
+
+		<div id="image-container">
+			<div class="lev3" id="image">
+				<div id="testing">blah</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+
+		$(document).ready(function(){
+			var w = $('#image').width();
+			var h = $('#image').height();
+
+			console.log('w: '+ w+ ' h: '+h);
+
+			var left = w - window.innerWidth;
+			var top = -1*Math.abs(h - window.innerHeight);
+
+			var x1 = -1*Math.abs(w - window.innerWidth);
+			var y1 = -1*Math.abs(h - window.innerHeight);
+
+			var x2;
+			var y2;
+
+			x1 = -90,
+			y1 = -90,
+			x2 = 0,
+			y2 = 0;
+
+
+
+			$('#image').draggable({ containment: [x1, y1, x2, y2], cursor: "crosshair" });
+		});
+
+	</script>
+
+</body>
+</html>

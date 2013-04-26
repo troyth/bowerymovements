@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>bowery movements</title>
+
+	<meta name="viewport" content="width=device-width">
 	
 	<!-- load CSS -->
 	<link rel="stylesheet" type="text/css" href="http://reset5.googlecode.com/hg/reset.min.css">
@@ -13,24 +15,25 @@
 
 	<!-- load javascript -->
 	<script src="js/script.js"></script>
-	<script src="js/twitter31.js"></script>
 
 </head>
 <body>
 	<div id='container'>
-		<a href="about.html"><img id="logo" src="svg/bm_logo.svg"></a>
+		<a href="/"><img id="logo" src="/assets/logo-main.png"></a>
 		<a id="spin-left" href="bm--3__4.html">spin left &lt;</a>
 		<a id="spin-right" href="bm--3__2.html">spin right &gt;</a>
 		<!--<a id="zoom-in" href="#">+ zoom in</a>
 		<a id="zoom-out" href="bm--2__1.html">&minus; zoom out</a>-->
 
-		<div id="marker"></div>
-		<div class="lev3" id="image">
-			<img src="img/bm--3__1.png"/>
-			<div id="overlay">
-				<!-- load SVG here -->
+		<div id="image-container">
+			<div class="lev3" id="image">
+				<div id="marker"></div>
+				<img src="img/bm--3__1.png"/>
+				<div id="overlay">
+					<!-- load SVG here -->
 
-				<!-- end SVG load -->
+					<!-- end SVG load -->
+				</div>
 			</div>
 		</div>
 	</div>
