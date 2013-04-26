@@ -29,6 +29,11 @@ a:hover{
 	z-index: 200;
 }
 
+#image-container{
+	border:3px solid red;
+	position: relative;
+}
+
 #image{
 	position: relative;
 }
