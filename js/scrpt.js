@@ -224,6 +224,9 @@ function swapImage(direction){
 	//$('#image img').attr('src', srcNew);
 	console.log('IMG[angleIndex][zoomIndex].height: '+ IMG[angleIndex][zoomIndex].height);
 
+	var iw = $('#image').width();
+	var ih = $('#image').height();
+
 	$('#image').css({
     	width: IMG[angleIndex][zoomIndex].width,
     	height: IMG[angleIndex][zoomIndex].height
@@ -232,7 +235,7 @@ function swapImage(direction){
 	$('#image img').one("load", function() {
         // image loaded here
         $('#image').draggable('destroy');
-        initImageDraggable();
+        initImageDraggable(true, iw, ih);
         refreshImage();
     }).attr("src", srcNew);
 
@@ -339,29 +342,28 @@ function refreshImage(){
 
 
 
-function initImageDraggable(flag){
+function initImageDraggable(flag, iw, ih){
 	var flag = flag || false;
 
 	console.log('angleIndex: '+ angleIndex + ' zoomIndex: '+zoomIndex);
 	console.log('IMG[angleIndex][zoomIndex].width: '+ IMG[angleIndex][zoomIndex].width);
 	console.log('IMG[angleIndex][zoomIndex].height: '+ IMG[angleIndex][zoomIndex].height);
 
-	$('#image').css({
-    	width: IMG[angleIndex][zoomIndex].width,
-    	height: IMG[angleIndex][zoomIndex].height
-    });
-
-	/*
-	var x1 = -1*Math.abs( IMG[angleIndex][zoomIndex].width - window.innerWidth );
-	var y1 = -1*Math.abs( IMG[angleIndex][zoomIndex].height - window.innerHeight );//seems to have a 400 px offset
-
-	var x2 = 0,
-		y2 = 1400;//add 1400 pixels for tweets on top of high buildings
-
-	*/
-
 	var ww = window.innerWidth;
 	var wh = window.innerHeight;
+
+	if(flag == true){
+		console.log('flag');
+		var iLeft = parseInt($('#image').css('left')) * IMG[angleIndex][zoomIndex].width / parseInt(iw);
+		var iTop = parseInt($('#image').css('top')) * IMG[angleIndex][zoomIndex].height / parseInt(ih);
+	}else{
+		var iLeft = Math.abs(IMG[angleIndex][zoomIndex].width/2 - ww/2);
+		var iTop = '';
+	}
+
+	console.log("$('#image').width(): "+$('#image').width());
+	console.log("$('#image').height(): "+$('#image').height());
+
 
 	var cw = 2*IMG[angleIndex][zoomIndex].width - ww;
 	var ch = 2*IMG[angleIndex][zoomIndex].height - wh;
@@ -375,22 +377,24 @@ function initImageDraggable(flag){
 		top: top
 	});
 
-	if(flag == true){
-		console.log('flag');
-	}else{
-		var iLeft = Math.abs(IMG[angleIndex][zoomIndex].width/2 - ww/2);
-		console.log('iLeft '+iLeft);
-	}
+	console.log('iLeft '+iLeft);
+	console.log('iTop '+iTop);
 
-	
-
-	$('#image').css('left', iLeft).draggable({ 'containment':'parent', 'cursor':'move' });//.css('top', initial_position[zoomIndex][angleIndex].top ).css('left', initial_position[zoomIndex][angleIndex].left ).css('backgroundColor', 'red');
+	$('#image')
+		.css({
+	    	width: IMG[angleIndex][zoomIndex].width,
+	    	height: IMG[angleIndex][zoomIndex].height,
+	    	left: iLeft, 
+	    	top: iTop
+	    })
+	    .draggable({ 'containment':'parent', 'cursor':'move' });
 }
 
 var MAX_ZOOM_INDEX = 3;
 
 function zoomIn(event){
 	event.preventDefault();
+	console.log('zoom in');
 
 	if(zoomIndex < MAX_ZOOM_INDEX){
 		zoomIndex++;
@@ -400,6 +404,7 @@ function zoomIn(event){
 
 function zoomOut(event){
 	event.preventDefault();
+	console.log('zoom out');
 
 	if(zoomIndex > 1){
 		zoomIndex--;
