@@ -30,12 +30,14 @@ a:hover{
 }
 
 #image{
-	
+	position: relative;
 }
 
-#image img{
+#image > img{
 	height: auto;
 	width: auto;
+	position: absolute;
+	bottom:0;
 }
 
 #overlay{

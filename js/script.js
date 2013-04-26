@@ -17,6 +17,79 @@ var tweetObj = {};
 
 var tweetIdObj = {};
 
+var IMG = [];
+IMG[1] = [];
+IMG[1][1] = {
+	width: 6556,
+	height: 1100//1000+100
+};
+IMG[1][2] = {
+	width: 13112,
+	height: 2250//2000+250
+};
+IMG[1][3] = {
+	width: 19668,
+	height: 3500//3000+500
+};
+IMG[1][4] = {
+	width: 26224,
+	height: 5000//4000+1000
+};
+
+IMG[2] = [];
+IMG[2][1] = {
+	width: 2485,
+	height: 1100//1000+100
+};
+IMG[2][2] = {
+	width: 4970,
+	height: 2250//2000+250
+};
+IMG[2][3] = {
+	width: 7455,
+	height: 3500//3000+500
+};
+IMG[2][4] = {
+	width: 9940,
+	height: 5000//4000+1000
+};
+
+IMG[3] = [];
+IMG[3][1] = {
+	width: 6892,
+	height: 1100//1000+100
+};
+IMG[3][2] = {
+	width: 13784,
+	height: 2250//2000+250
+};
+IMG[3][3] = {
+	width: 20675,
+	height: 3500//3000+500
+};
+IMG[3][4] = {
+	width: 27567,
+	height: 5000//4000+1000
+};
+
+IMG[4] = [];
+IMG[4][1] = {
+	width: 3446,
+	height: 1100//1000+100
+};
+IMG[4][2] = {
+	width: 6891,
+	height: 2250//2000+250
+};
+IMG[4][3] = {
+	width: 10337,
+	height: 3500//3000+500
+};
+IMG[4][4] = {
+	width: 13782,
+	height: 5000//4000+1000
+};
+
 
 //fetch tweets by face
 function getTweets() {
@@ -142,35 +215,26 @@ function swapImage(direction){
 	//clear SVG to prevent selection while turning
 	$('#overlay').empty();
 
-
-	if(direction == 'right'){
-		//for values at the min
-		if (angleIndex <= 1) angleIndex = maxAngle;
-
-		//for all numbers above the min
-		else if (angleIndex > 1)angleIndex--;
-	}else{
-		//for values at the min
-		if (angleIndex >= maxAngle) angleIndex = 1;
-
-		//for all numbers above the min
-		else if (angleIndex < maxAngle)angleIndex++;
-	}
-
 	//set new source for next frame
-	var srcNew = "img/bm--"+zoomIndex+"__"+angleIndex+".png";
+	var srcNew = "images/"+angleIndex+"-"+zoomIndex+".png";
 
 	//load new image
 	//$('#image img').attr('src', srcNew);
+	console.log('IMG[angleIndex][zoomIndex].height: '+ IMG[angleIndex][zoomIndex].height);
+
+	$('#image').css({
+    	width: IMG[angleIndex][zoomIndex].width,
+    	height: IMG[angleIndex][zoomIndex].height
+    });
 
 	$('#image img').one("load", function() {
         // image loaded here
+        initImageDraggable();
         refreshImage();
     }).attr("src", srcNew);
 
 	//move image into initial position
-	setInitialBackgroundImagePosition();
-	
+	//setInitialBackgroundImagePosition();
 	
 
 	console.log('svg '+zoomIndex+'/'+angleIndex+' loaded.');
@@ -187,7 +251,13 @@ function spinRight(event){
 	//alert('spinRight called');
 	console.log('spinRight called');
 
-	swapImage('right');	
+	//for values at the min
+	if (angleIndex <= 1) angleIndex = maxAngle;
+
+	//for all numbers above the min
+	else if (angleIndex > 1)angleIndex--;
+
+	swapImage();	
 }//end Spin Right
 
 
@@ -195,6 +265,12 @@ function spinLeft(event){
 	event.preventDefault();
 	//alert('spinLeft called');
 	console.log('spinLeft called');
+
+	//for values at the min
+	if (angleIndex >= maxAngle) angleIndex = 1;
+
+	//for all numbers above the min
+	else if (angleIndex < maxAngle)angleIndex++;
 
 	swapImage('left');
 }//end Spin Left
@@ -206,6 +282,7 @@ function refreshImage(){
 
 	$('polygon, rect').unbind('mouseenter', 'mouseleave');
 
+	/*
 	//load new svg
 	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {
 		console.log('svg loaded, binding polygon hover event');
@@ -256,6 +333,7 @@ function refreshImage(){
 			$('#marker').empty();
 		});
 	});	
+*/
 }
 
 
@@ -265,6 +343,10 @@ function initImageDraggable(){
 	var w = $('#image > img').width();
 	var h = $('#image > img').height();
 
+	$('#image').css({
+    	width: IMG[angleIndex][zoomIndex].width,
+    	height: IMG[angleIndex][zoomIndex].height
+    });
 
 
 	var x1 = -1*Math.abs( w - window.innerWidth );
@@ -275,9 +357,30 @@ function initImageDraggable(){
 
 	console.log('('+x1 + ', '+ y1 + '), ('+ x2 + ','+y2+')');
 
-	$('#image').draggable({ containment: [x1, y1, x2, y2], cursor: "crosshair" });//.css('top', initial_position[zoomIndex][angleIndex].top ).css('left', initial_position[zoomIndex][angleIndex].left ).css('backgroundColor', 'red');
+	$('#image').draggable("option", "containment", [x1, y1, x2, y2]);//.css('top', initial_position[zoomIndex][angleIndex].top ).css('left', initial_position[zoomIndex][angleIndex].left ).css('backgroundColor', 'red');
 
 }
+
+var MAX_ZOOM_INDEX = 3;
+
+function zoomIn(event){
+	event.preventDefault();
+
+	if(zoomIndex < MAX_ZOOM_INDEX){
+		zoomIndex++;
+		swapImage();
+	}
+}
+
+function zoomOut(event){
+	event.preventDefault();
+
+	if(zoomIndex > 1){
+		zoomIndex--;
+		swapImage();
+	}
+}
+
 
 
 
@@ -292,7 +395,7 @@ $(document).ready(function(){
 	imgWd = $('#image img').width();
 
 	//parse filename variables
-	zoomIndex = 3;
+	zoomIndex = 1;
 	angleIndex = 1;
 	
 	
@@ -301,6 +404,14 @@ $(document).ready(function(){
 
 	/////////SPIN_RIGHT/////////
 	$('#spin-right').on('click', spinRight); //end Spin Right
+
+	/////////ZOOM IN/////////
+	$('#zoom-in').on('click', zoomIn); 
+
+	/////////ZOOM OUT/////////
+	$('#zoom-out').on('click', zoomOut); 
+
+	$('#image').draggable();
 
 	//load initial SVG overlay
 	refreshImage();
