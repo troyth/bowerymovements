@@ -216,7 +216,7 @@ function swapImage(direction){
 	$('#overlay').empty();
 
 	//set new source for next frame
-	var srcNew = "images/"+angleIndex+"-"+zoomIndex+".png";
+	var srcNew = "PNG/"+angleIndex+"-"+zoomIndex+".png";
 
 	//load new image
 	//$('#image img').attr('src', srcNew);

@@ -2,3 +2,9 @@
 assets/AboutBG.png
 
 *.png
+
+*.zip
+
+.DS_Store
+
+*.svg

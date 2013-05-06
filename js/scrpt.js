@@ -20,75 +20,63 @@ var tweetIdObj = {};
 var IMG = [];
 IMG[1] = [];
 IMG[1][1] = {
-	width: 6556,
-	height: 1100//1000+100
+	width: 2900,
+	height: 600//1000+100
 };
 IMG[1][2] = {
-	width: 13112,
-	height: 2250//2000+250
+	width: 5800,
+	height: 1100//2000+250
 };
 IMG[1][3] = {
-	width: 19668,
-	height: 3500//3000+500
+	width: 11600,
+	height: 2250//3000+500
 };
-IMG[1][4] = {
-	width: 26224,
-	height: 5000//4000+1000
-};
+
 
 IMG[2] = [];
 IMG[2][1] = {
-	width: 2485,
-	height: 1100//1000+100
+	width: 950,
+	height: 600//1000+100
 };
 IMG[2][2] = {
-	width: 4970,
-	height: 2250//2000+250
+	width: 1900,
+	height: 1100//2000+250
 };
 IMG[2][3] = {
-	width: 7455,
-	height: 3500//3000+500
+	width: 3800,
+	height: 2250//3000+500
 };
-IMG[2][4] = {
-	width: 9940,
-	height: 5000//4000+1000
-};
+
 
 IMG[3] = [];
 IMG[3][1] = {
-	width: 6892,
-	height: 1100//1000+100
+	width: 2950,
+	height: 600//1000+100
 };
 IMG[3][2] = {
-	width: 13784,
-	height: 2250//2000+250
+	width: 5900,
+	height: 1100//2000+250
 };
 IMG[3][3] = {
-	width: 20675,
-	height: 3500//3000+500
+	width: 11800,
+	height: 2250//3000+500
 };
-IMG[3][4] = {
-	width: 27567,
-	height: 5000//4000+1000
-};
+
 
 IMG[4] = [];
 IMG[4][1] = {
-	width: 3446,
-	height: 1100//1000+100
+	width: 600,
+	height: 600//1000+100
 };
 IMG[4][2] = {
-	width: 6891,
-	height: 2250//2000+250
+	width: 1200,
+	height: 1100//2000+250
 };
 IMG[4][3] = {
-	width: 10337,
-	height: 3500//3000+500
+	width: 2400,
+	height: 2250//3000+500
 };
-IMG[4][4] = {
-	width: 13782,
-	height: 5000//4000+1000
-};
+
 
 
 
@@ -218,7 +206,7 @@ function swapImage(direction){
 	$('#overlay').empty();
 
 	//set new source for next frame
-	var srcNew = "images/"+angleIndex+"-"+zoomIndex+".png";
+	var srcNew = "PNG/"+angleIndex+"-"+zoomIndex+".png";
 
 	//load new image
 	//$('#image img').attr('src', srcNew);
@@ -368,17 +356,27 @@ function initImageDraggable(flag, iw, ih){
 	var cw = 2*IMG[angleIndex][zoomIndex].width - ww;
 	var ch = 2*IMG[angleIndex][zoomIndex].height - wh;
 	var left = -1*Math.abs(IMG[angleIndex][zoomIndex].width - ww);
-	var top = -1*Math.abs(IMG[angleIndex][zoomIndex].height - wh);
+	
 
-	$('#image-container').css({
-		width: cw,
-		height: ch,
-		left: left,
-		top: top
-	});
+	if(IMG[angleIndex][zoomIndex].height < wh){
+		$('#image-container').css({
+			width: cw,
+			height: IMG[angleIndex][zoomIndex].height,
+			left: left,
+			bottom: 0,
+			top: ''
+		});
+	}else{
+		var top = -1*Math.abs(IMG[angleIndex][zoomIndex].height - wh);
 
-	console.log('iLeft '+iLeft);
-	console.log('iTop '+iTop);
+		$('#image-container').css({
+			width: cw,
+			height: ch,
+			left: left,
+			top: top,
+			bottom: ''
+		});
+	}
 
 	$('#image')
 		.css({
