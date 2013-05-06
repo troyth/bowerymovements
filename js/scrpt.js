@@ -131,7 +131,10 @@ function drawTweetsFace(data) {
 		var classString = data[i].hashtags[0]+'Text';
 	    var classStringFace = 'Face' + angleIndex;
 
-	    $('#image').append( '<p id="'+data[i].hashtags[0]+'Text" class="bubbletext '+ classString+'" style="width:200px; height:auto; position:absolute; z-index:101;left:' + ptxt + 'px;top:'+ ptyt + 'px" >'+data[i].text+'</p>');
+	    var zIndexText = 100 + Math.floor(Math.random()*500);//random zIndex
+	    var zIndexImage = zIndexText -1;
+
+	    $('#image').append( '<p id="'+data[i].hashtags[0]+'Text" class="bubbletext '+ classString+'" style="width:200px; height:auto; position:absolute; z-index:'+zIndexText+';left:' + ptxt + 'px;top:'+ ptyt + 'px" >'+data[i].text+'</p>');
 
 	    var ptxb = parseInt($line.attr('x2'))-80;
 	    var ptyb = parseInt($line.attr('y2'))-130-verticalBubbleShift * BUILDING_TWEET_COUNTER[ data[i].hashtags[0] ];
@@ -146,7 +149,8 @@ function drawTweetsFace(data) {
 	      bubbleString = "bubbleBottom"+String(randInt)+".png";
 	    }
 
-	    $('#image').append( '<img src="img/bubbles/'+bubbleString+'"  class="bubblebg '+ classString+'" style="width:auto; height:auto; position:absolute; z-index:100;left:' + ptxb + 'px;top:'+ ptyb +'px" />');
+
+	    $('#image').append( '<img src="img/bubbles/'+bubbleString+'"  class="bubblebg '+ classString+'" style="width:auto; height:auto; position:absolute; z-index:'+zIndexImage+';left:' + ptxb + 'px;top:'+ ptyb +'px" />');
 
 	}
 
@@ -292,12 +296,11 @@ function refreshImage(){
 			var container_bottom = container_top - $container.height();
 
 			//width and height of the hover image
-			var WIDTH_OF_HOVER_ELEMENT = 20;//width in pixels
-			var HEIGHT_OF_HOVER_ELEMENT = 100;//height in pixels
+			var WIDTH_OF_HOVER_ELEMENT = 116;//width in pixels
+			var HEIGHT_OF_HOVER_ELEMENT = 67;//height in pixels
 
-			var left = parseInt($('#image').position().left) + 
-					parseInt($container.find('line').attr('x1')) -
-					WIDTH_OF_HOVER_ELEMENT;
+			var left = parseInt($container.find('line').attr('x1')) -
+					WIDTH_OF_HOVER_ELEMENT/2;
 
 			$('#marker').css('left', left);
 
@@ -307,22 +310,24 @@ function refreshImage(){
 						parseInt($container.find('line').attr('y1')) -
 						parseInt($container.find('line').attr('y2'))
 					)*2 -
-					HEIGHT_OF_HOVER_ELEMENT;
+					HEIGHT_OF_HOVER_ELEMENT/2;
 
 			if(top_of_bottom > window.innerHeight){
-				$('#marker').css('bottom', '20%');
+				$('#marker').css('bottom', '30%');
 			}else{
 				$('#marker').css('top', top_of_bottom);
 			}
 
 			//@todo: might need to hardcode marker width as it will be 0 when empty
-			left = left + parseInt($('#image').css('left')) - parseInt($('#marker').width());
+			//left = left + parseInt($('#image').css('left')) - parseInt($('#marker').width());
 
-			$('#marker').empty();
-			$('#marker').append(elemID);
+			$('#marker .text').text(elemID);
+
+
+			$('#marker').show();
 		}).bind('mouseleave' ,function(){
 
-			$('#marker').empty();
+			$('#marker').hide();
 		});
 	});	
 
