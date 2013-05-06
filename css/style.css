@@ -42,7 +42,7 @@ a:hover{
 	position: relative;
 }
 
-#image > img{
+#image #img{
 	height: auto;
 	width: auto;
 	position: absolute;

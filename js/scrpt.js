@@ -220,7 +220,7 @@ function swapImage(direction){
     	height: IMG[angleIndex][zoomIndex].height
     });
 
-	$('#image img').one("load", function() {
+	$('#image #img img').one("load", function() {
         // image loaded here
         $('#image').draggable('destroy');
         initImageDraggable(true, iw, ih);
@@ -274,9 +274,9 @@ function refreshImage(){
 
 	$('polygon, rect').unbind('mouseenter', 'mouseleave');
 
-	/*
+	
 	//load new svg
-	$('#overlay').load('svg/bm--'+zoomIndex+'__'+angleIndex+'.svg', function() {
+	$('#overlay').load('overlay/'+angleIndex+'-'+zoomIndex+'.svg', function() {
 		console.log('svg loaded, binding polygon hover event');
 
 		getTweets();
@@ -325,7 +325,7 @@ function refreshImage(){
 			$('#marker').empty();
 		});
 	});	
-*/
+
 }
 
 
