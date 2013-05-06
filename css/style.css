@@ -22,15 +22,19 @@ a:hover{
 
 #logo{
 	position:fixed;
-	top:0%;
-	right:0%;
-	margin-top: 30px;
-	margin-right:10px;
+	top: 40px;
+	right:15px;
 	z-index: 200;
 }
 
+#aboutbtn{
+	position: fixed;
+	top: 10px;
+	right: 30px;
+	z-index: 201;
+}
+
 #image-container{
-	border:3px solid red;
 	position: relative;
 }
 
