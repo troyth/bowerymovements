@@ -66,7 +66,7 @@ var testArray = new Array ("This is test tweet number 1", "This is the second te
   $(window).load(function(){
 
 
-  getTweetsAll(globalFace-1);
+  getTweetsAll(globalFace);
   
   
   var count=0
@@ -130,13 +130,14 @@ var testArray = new Array ("This is test tweet number 1", "This is the second te
 
 
 function getTweetsAll(face) {
-  console.log("getTweetsAll() Called.");
+  console.log("getTweetsAll() Called with face: "+ face);
 
   var FACE_COUNT = bldgList.length;
   var CALLBACK_COUNTER = 0;
 
   $.each(bldgList[face], function(i,name) { 
     var target_url =  'http://webassite.com/util/twitter-api/REST/tweets/movements/hashtag/'+name+'/limit/10';
+    var target_url = 'http://dirty.gsappcloud.org/webassite-api/tweets/movements/elevation/'+face;
 
     $.ajax({
       type : "GET",
